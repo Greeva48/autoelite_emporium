@@ -1,0 +1,1563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoElite Emporium</title>
+    <style>
+        :root {
+            --primary-color: #10b981;
+            --secondary-color: #3b82f6;
+            --background-color: #111827;
+            --text-color: #f3f4f6;
+            --card-background: #1f2937;
+            --accent-color: #8b5cf6;
+            --success-color: #34d399;
+            --error-color: #f87171;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            width: 100%;
+        }
+
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+        }
+
+        nav ul {
+            list-style-type: none;
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        nav ul li a {
+            color: var(--text-color);
+            text-decoration: none;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        nav ul li a:hover {
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+        }
+
+        .auth-button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .auth-button:hover {
+            background-color: #059669;
+            transform: scale(1.05);
+        }
+
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 1s ease-out;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+        }
+
+        .hero-content p {
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.5s both;
+        }
+
+        .section {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.7);
+        }
+
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .car-card {
+            background-color: var(--card-background);
+            border-radius: 0.5rem;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .car-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 10px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .car-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .car-details {
+            padding: 1.5rem;
+        }
+
+        .car-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            color: var(--primary-color);
+        }
+
+        .car-price {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+        }
+
+        .order-button {
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0.8rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .order-button:hover {
+            background-color: #059669;
+            transform: scale(1.05);
+        }
+
+        .customization-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .customization-option {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+
+        .customization-option:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .customization-option i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+        }
+
+        .customization-option h3 {
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .customization-option p {
+            font-size: 0.9rem;
+            color: var(--text-color);
+        }
+
+        .services-grid, .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .service-card, .feature-card {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .service-card:hover, .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .service-icon, .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .testimonial-card {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            margin-bottom: 2.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .testimonial-content {
+            font-style: italic;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-author {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+        }
+
+        .contact-form {
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .contact-form textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #4b5563;
+            background-color: #374151;
+            color: white;
+            border-radius: 0.25rem;
+            resize: vertical;
+            font-size: 1rem;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 0.5rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            font-size: 1rem;
+            z-index: 2000;
+        }
+
+        .toast.show {
+            opacity: 1;
+        }
+
+        footer {
+            background-color: var(--card-background);
+            padding: 2rem 0;
+            margin-top: auto;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-color);
+            text-decoration: none;
+            margin-left: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-color);
+        }
+
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .popup.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .popup-content {
+            background-color: var(--card-background);
+            padding: 2.5rem;
+            border-radius: 0.5rem;
+            max-width: 450px;
+            width: 100%;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .popup.active .popup-content {
+            transform: scale(1);
+        }
+
+        .popup-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: var(--primary-color);
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #4b5563;
+            background-color: #374151;
+            color: white;
+            border-radius: 0.25rem;
+            font-size: 1rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+        }
+
+        .close-button {
+            background-color: transparent;
+            color: var(--text-color);
+            border: none;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+            transition: color 0.3s ease;
+        }
+
+        .close-button:hover {
+            color: white;
+        }
+
+        .color-options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .color-option {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.5rem;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .cart-icon, .history-icon {
+            position: relative;
+            cursor:  pointer;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--accent-color);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 0.8rem;
+        }
+
+        .cart-popup, .history-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            z-index: 1001;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .cart-item, .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--text-color);
+        }
+
+        .cart-item img, .history-item img {
+            width: 80px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 1rem;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            display: none;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--card-background);
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: 0.25rem;
+        }
+
+        .dropdown-content a {
+            color: var(--text-color);
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--background-color);
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .payment-options {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+
+        .payment-option {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--primary-color);
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .payment-option:hover, .payment-option.selected {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .receipt {
+            background-color: white;
+            color: black;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .receipt h2 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+
+        .receipt-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .receipt-total {
+            border-top: 2px solid var(--primary-color);
+            margin-top: 1rem;
+            padding-top: 1rem;
+            font-weight: bold;
+        }
+
+        .price-filter {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .price-filter label {
+            margin-right: 1rem;
+        }
+
+        .price-filter input {
+            width: 100px;
+            padding: 0.5rem;
+            border: 1px solid #4b5563;
+            background-color: #374151;
+            color: white;
+            border-radius: 0.25rem;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        /* Futuristic enhancements */
+        .neon-border {
+            border: 2px solid var(--primary-color);
+            box-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+        }
+
+        .hologram {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hologram::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to bottom right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(45deg);
+            animation: hologramEffect 5s linear infinite;
+        }
+
+        @keyframes hologramEffect {
+            0% {
+                transform: rotate(45deg) translateY(-100%);
+            }
+            100% {
+                transform: rotate(45deg) translateY(100%);
+            }
+        }
+
+        .futuristic-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--accent-color));
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .futuristic-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .futuristic-input {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid var(--primary-color);
+            color: var(--text-color);
+            padding: 10px 15px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+
+        .futuristic-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px var(--primary-color);
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 3rem;
+            }
+
+            .hero-content p {
+                font-size: 1.4rem;
+            }
+
+            .section-title {
+                font-size: 2rem;
+            }
+
+            .services-grid, .features-grid, .customization-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <header id="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">AutoElite Emporium</div>
+                <nav>
+                    <ul>
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#inventory">Inventory</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#customization">Customize</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </nav>
+                <div id="authSection">
+                    <button id="authButton" class="auth-button futuristic-button">Login / Sign Up</button>
+                    <div id="userDropdown" class="dropdown" style="display: none;">
+                        <button id="userButton" class="auth-button futuristic-button"> User</button>
+                        <div class="dropdown-content">
+                            <a href="#" id="cartLink">Cart <span id="cartCount">0</span></a>
+                            <a href="#" id="historyLink">Order History</a>
+                            <a href="#" id="receiptLink">View Receipt</a>
+                            <a href="#" id="logoutLink">Logout</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Welcome to AutoElite Emporium</h1>
+                <p>Discover Luxury, Experience Performance</p>
+                <button class="auth-button futuristic-button pulse" onclick="scrollToSection('inventory')">Explore Our Collection</button>
+            </div>
+        </section>
+
+        <section id="inventory" class="section">
+            <div class="container">
+                <h2 class="section-title">Our Exclusive Collection</h2>
+                <div class="price-filter">
+                    <label for="minPrice">Min Price:</label>
+                    <input type="number" id="minPrice" min="0" step="1000">
+                    <label for="maxPrice">Max Price:</label>
+                    <input type="number" id="maxPrice" min="0" step="1000">
+                    <button id="filterButton" class="auth-button futuristic-button">Filter</button>
+                </div>
+                <div class="car-grid" id="carGrid">
+                    <!-- Car cards will be dynamically inserted here -->
+                </div>
+            </div>
+        </section>
+
+        <section id="services" class="section">
+            <div class="container">
+                <h2 class="section-title">Our Premium Services</h2>
+                <div class="services-grid">
+                    <div class="service-card fade-in neon-border">
+                        <i class="fas fa-cogs service-icon"></i>
+                        <h3>Personalized Vehicle Customization</h3>
+                        <p>Make your luxury car truly yours with our bespoke customization services.</p>
+                    </div>
+                    <div class="service-card fade-in neon-border">
+                        <i class="fas fa-truck-loading service-icon"></i>
+                        <h3>Concierge Delivery Service</h3>
+                        <p>Experience white-glove delivery of your new luxury vehicle to your doorstep.</p>
+                    </div>
+                    <div class="service-card fade-in neon-border">
+                        <i class="fas fa-tachometer-alt service-icon"></i>
+                        <h3>Performance Upgrades</h3>
+                        <p>Enhance your vehicle's performance with our cutting-edge upgrade options.</p>
+                    </div>
+                    <div class="service-card fade-in neon-border">
+                        <i class="fas fa-shield-alt service-icon"></i>
+                        <h3>Extended Warranty</h3>
+                        <p>Protect your investment with our comprehensive extended warranty plans.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="section">
+            <div class="container">
+                <h2 class="section-title">Exclusive Features</h2>
+                <div class="features-grid">
+                    <div class="feature-card fade-in hologram">
+                        <i class="fas fa-car-crash feature-icon"></i>
+                        <h3>Advanced Driver Assistance</h3>
+                        <p>State-of-the-art safety features for a secure driving experience.</p>
+                    </div>
+                    <div class="feature-card fade-in hologram">
+                        <i class="fas fa-music feature-icon"></i>
+                        <h3>Premium Sound System</h3>
+                        <p>Immersive audio experience with top-tier sound systems.</p>
+                    </div>
+                    <div class="feature-card fade-in hologram">
+                        <i class="fas fa-sun feature-icon"></i>
+                        <h3>Panoramic Sunroof</h3>
+                        <p>Enjoy breathtaking views with our panoramic sunroof option.</p>
+                    </div>
+                    <div class="feature-card fade-in hologram">
+                        <i class="fas fa-battery-full feature-icon"></i>
+                        <h3>Wireless Charging</h3>
+                        <p>Convenient wireless charging for your devices on the go.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="customization" class="section">
+            <div class="container">
+                <h2 class="section-title">Customize Your Ride</h2>
+                <div class="customization-options">
+                    <div class="customization-option float neon-border">
+                        <i class="fas fa-palette"></i>
+                        <h3>Exterior Paint</h3>
+                        <p>Choose from a wide range of premium colors and finishes.</p>
+                    </div>
+                    <div class="customization-option float neon-border">
+                        <i class="fas fa-couch"></i>
+                        <h3>Interior Trim</h3>
+                        <p>Select luxurious materials and finishes for your car's interior.</p>
+                    </div>
+                    <div class="customization-option float neon-border">
+                        <i class="fas fa-cog"></i>
+                        <h3>Performance Upgrades</h3>
+                        <p>Enhance your vehicle's power and handling capabilities.</p>
+                    </div>
+                    <div class="customization-option float neon-border">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <h3>Technology Package</h3>
+                        <p>Upgrade your infotainment and driver assistance systems.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="testimonials" class="section">
+            <div class="container">
+                <h2 class="section-title">Client Experiences</h2>
+                <div class="testimonial-card fade-in neon-border">
+                    <p class="testimonial-content">"AutoElite Emporium redefined my expectations of luxury car buying. Their attention to detail and personalized service are unmatched."</p>
+                    <p class="testimonial-author">- Kartikey, CEO</p>
+                </div>
+                <div class="testimonial-card fade-in neon-border">
+                    <p class="testimonial-content">"From selection to delivery, my experience with AutoElite was nothing short of exceptional. They truly understand the needs of car enthusiasts."</p>
+                    <p class="testimonial-author">- Srivastava, Racing Driver</p>
+                </div>
+                <div class="testimonial-card fade-in neon-border">
+                    <p class="testimonial-content">"The team at AutoElite Emporium goes above and beyond. Their knowledge and passion for automobiles are evident in every interaction."</p>
+                    <p class="testimonial-author">- Manav, Collector</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="section">
+            <div class="container">
+                <h2 class="section-title">Connect With Us</h2>
+                <form id="contactForm" class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" required class="futuristic-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" required class="futuristic-input">
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="4" required class="futuristic-input"></textarea>
+                    </div>
+                    <button type="submit" class="auth-button futuristic-button">Send Message</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 AutoElite Emporium. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="/privacy">Privacy Policy</a>
+                    <a href="/terms">Terms of Service</a>
+                    <a href="/about">About Us</a>
+                    <a href="/careers">Careers</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Popup -->
+    <div id="authPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Login / Sign Up</h2>
+            <form id="authForm">
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required class="futuristic-input">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required class="futuristic-input">
+                </div>
+                <button type="submit" class="auth-button futuristic-button">Login</button>
+            </form>
+            <p>Don't have an account? <a href="#" id="showSignup">Sign up</a></p>
+            <button class="close-button" onclick="closePopup('authPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Signup Popup -->
+    <div id="signupPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Sign Up</h2>
+            <form id="signupForm">
+                <div class="form-group">
+                    <label for="newUsername">Username:</label>
+                    <input type="text" id="newUsername" name="newUsername" required class="futuristic-input">
+                </div>
+                <div class="form-group">
+                    <label for="newEmail">Email:</label>
+                    <input type="email" id="newEmail" name="newEmail" required class="futuristic-input">
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">Password:</label>
+                    <input type="password" id="newPassword" name="newPassword" required class="futuristic-input">
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm Password:</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required class="futuristic-input">
+                </div>
+                <button type="submit" class="auth-button futuristic-button">Sign Up</button>
+            </form>
+            <p>Already have an account? <a href="#" id="showLogin">Login</a></p>
+            <button class="close-button" onclick="closePopup('signupPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Order Popup -->
+    <div id="orderPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Customize Your Order</h2>
+            <form id="orderForm">
+                <div class="form-group">
+                    <label for="carModel">Car Model:</label>
+                    <input type="text" id="carModel" name="carModel" readonly class="futuristic-input">
+                </div>
+                <div class="form-group">
+                    <label for="color">Color:</label>
+                    <div class="color-options" id="colorOptions"></div>
+                </div>
+                <div class="form-group">
+                    <label for="interiorTrim">Interior Trim:</label>
+                    <select id="interiorTrim" name="interiorTrim" required class="futuristic-input">
+                        <option value="leather">Leather</option>
+                        <option value="alcantara">Alcantara</option>
+                        <option value="carbon-fiber">Carbon Fiber</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="additionalFeatures">Additional Features:</label>
+                    <select id="additionalFeatures" name="additionalFeatures" multiple class="futuristic-input">
+                        <option value="sport-package">Sport Package</option>
+                        <option value="premium-sound">Premium Sound System</option>
+                        <option value="advanced-driver-assist">Advanced Driver Assistance</option>
+                    </select>
+                </div>
+                <button type="submit" class="auth-button futuristic-button">Add to Cart</button>
+            </form>
+            <button class="close-button" onclick="closePopup('orderPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Cart Popup -->
+    <div id="cartPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Your Cart</h2>
+            <div id="cartItems"></div>
+            <button id="checkoutButton" class="auth-button futuristic-button">Proceed to Checkout</button>
+            <button class="close-button" onclick="closePopup('cartPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Checkout Popup -->
+    <div id="checkoutPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Checkout</h2>
+            <div id="checkoutItems"></div>
+            <div class="payment-options">
+                <div class="payment-option" data-payment="credit">Credit Card</div>
+                <div class="payment-option" data-payment="debit">Debit Card</div>
+                <div class="payment-option" data-payment="paypal">PayPal</div>
+            </div>
+            <button id="completePaymentButton" class="auth-button futuristic-button">Complete Payment</button>
+            <button class="close-button" onclick="closePopup('checkoutPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Receipt Popup -->
+    <div id="receiptPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Purchase Receipt</h2>
+            <div id="receipt" class="receipt"></div>
+            <button class="close-button" onclick="closePopup('receiptPopup')">Close</button>
+        </div>
+    </div>
+
+    <!-- Order History Popup -->
+    <div id="historyPopup" class="popup">
+        <div class="popup-content">
+            <h2 class="popup-title">Order History</h2>
+            <div id="orderHistory"></div>
+            <button class="close-button" onclick="closePopup('historyPopup')">Close</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        let isLoggedIn = false;
+        let currentUser = '';
+        let cart = [];
+        let orderHistory = [];
+        let lastReceipt = null;
+
+        const carData = [
+            { id: 1, name: "Luxury Sedan", price: 75000, image: "https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 2, name: "Sports Coupe", price: 95000, image: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 3, name: "Electric SUV", price: 85000, image: "https://images.unsplash.com/photo-1555215695-3004980ad54e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 4, name: "Hybrid Crossover", price: 65000, image: "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 5, name: "Performance Hatchback", price: 55000, image: "https://images.unsplash.com/photo-1471479917193-f00955256257?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 6, name: "Convertible Roadster", price: 105000, image: "https://images.unsplash.com/photo-1489824904134-891ab64532f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 7, name: "Luxury SUV", price: 110000, image: "https://images.unsplash.com/photo-1519245659620-e859806a8d3b?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 8, name: "Electric Supercar", price: 250000, image: "https://images.unsplash.com/photo-1554744512-d6c603f27c54?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 9, name: "Grand Tourer", price: 180000, image: "https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 10, name: "Compact EV", price: 45000, image: "https://images.unsplash.com/photo-1523676060187-f55189a71f5e?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" },
+            { id: 11, name: "Luxury Limousine", price: 300000, image: "https://static.photodexia.com/largeweb/repository/u-enblog/62ccf7b4e5faf0dbfd614cdc4a8824baphoto16761077736909d670f8b1afa" },
+            { id: 12, name: "Off-Road Adventure", price: 70000, image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" }
+        ];
+
+        const colorOptions = [
+            { name: "Midnight Black", code: "#000000" },
+            { name: "Pearl White", code: "#FFFFFF" },
+            { name: "Racing Red", code: "#FF0000" },
+            { name: "Ocean Blue", code: "#0000FF" },
+            { name: "Forest Green", code: "#228B22" },
+            { name: "Sunburst Orange", code: "#FFA500" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            populateCarGrid();
+            setupEventListeners();
+            checkLoginState();
+        });
+
+        function populateCarGrid(minPrice = 0, maxPrice = Infinity) {
+            const carGrid = document.getElementById('carGrid');
+            carGrid.innerHTML = ''; // Clear existing cars
+            carData.forEach(car => {
+                if (car.price >= minPrice && car.price <= maxPrice) {
+                    const carCard = document.createElement('div');
+                    carCard.className = 'car-card fade-in';
+                    carCard.innerHTML = `
+                        <img src="${car.image}" alt="${car.name}" class="car-image">
+                        <div class="car-details">
+                            <h3 class="car-name">${car.name}</h3>
+                            <p class="car-price">$${car.price.toLocaleString()}</p>
+                            <button class="order-button futuristic-button" onclick="showOrderPopup(${car.id})">Customize & Order</button>
+                        </div>
+                    `;
+                    carGrid.appendChild(carCard);
+                }
+            });
+        }
+
+        function setupEventListeners() {
+            document.getElementById('authButton').addEventListener('click', showAuthPopup);
+            document.getElementById('authForm').addEventListener('submit', handleAuth);
+            document.getElementById('signupForm').addEventListener('submit', handleSignup);
+            document.getElementById('showSignup').addEventListener('click', () => {
+                closePopup('authPopup');
+                showPopup('signupPopup');
+            });
+            document.getElementById('showLogin').addEventListener('click', () => {
+                closePopup('signupPopup');
+                showPopup('authPopup');
+            });
+            document.getElementById('logoutLink').addEventListener('click', handleLogout);
+            document.getElementById('cartLink').addEventListener('click', showCartPopup);
+            document.getElementById('historyLink').addEventListener('click', showHistoryPopup);
+            document.getElementById('receiptLink').addEventListener('click', showLastReceipt);
+            document.getElementById('contactForm').addEventListener('submit', handleContactForm);
+            document.getElementById('checkoutButton').addEventListener('click', showCheckoutPopup);
+            document.getElementById('completePaymentButton').addEventListener('click', handlePayment);
+            document.getElementById('filterButton').addEventListener('click', handlePriceFilter);
+            
+            document.querySelectorAll('.payment-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.payment-option').forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                });
+            });
+        }
+
+        function handlePriceFilter() {
+            const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+            populateCarGrid(minPrice, maxPrice);
+        }
+
+        function showAuthPopup() {
+            showPopup('authPopup');
+        }
+
+        function showPopup(popupId) {
+            document.getElementById(popupId).classList.add('active');
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closePopup(popupId) {
+            document.getElementById(popupId).classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            if (username && password) {
+                // Simulate authentication (in a real app, this would be a server request)
+                setTimeout(() => {
+                    isLoggedIn = true;
+                    currentUser = username;
+                    closePopup('authPopup');
+                    updateAuthState();
+                    showToast(`Welcome,${username}!`);
+                    localStorage.setItem('user', JSON.stringify({ username, isLoggedIn: true }));
+                }, 1000);
+            } else {
+                showToast('Please enter both username and password.');
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            const username = document.getElementById('newUsername').value;
+            const email = document.getElementById('newEmail').value;
+            const password = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match.');
+                return;
+            }
+
+            if (username && email && password) {
+                // Simulate signup (in a real app, this would be a server request)
+                setTimeout(() => {
+                    isLoggedIn = true;
+                    currentUser = username;
+                    closePopup('signupPopup');
+                    updateAuthState();
+                    showToast(` ${username}! Your account has been created.`);
+                    localStorage.setItem('user', JSON.stringify({ username, isLoggedIn: true }));
+                }, 1000);
+            } else {
+                showToast('Please fill in all fields.');
+            }
+        }
+
+        function handleLogout() {
+            isLoggedIn = false;
+            currentUser = '';
+            cart = [];
+            updateAuthState();
+            showToast('You have been logged out.');
+            localStorage.removeItem('user');
+        }
+
+        function updateAuthState() {
+            const authButton = document.getElementById('authButton');
+            const userDropdown = document.getElementById('userDropdown');
+            const userButton = document.getElementById('userButton');
+
+            if (isLoggedIn) {
+                authButton.style.display = 'none';
+                userDropdown.style.display = 'block';
+                userButton.textContent = ` ${currentUser}`;
+            } else {
+                authButton.style.display = 'block';
+                userDropdown.style.display = 'none';
+            }
+
+            updateCartCount();
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function showOrderPopup(carId) {
+            if (!isLoggedIn) {
+                showToast('Please log in to place an order.');
+                return;
+            }
+
+            const car = carData.find(c => c.id === carId);
+            if (car) {
+                document.getElementById('carModel').value = car.name;
+                showPopup('orderPopup');
+                populateColorOptions();
+            }
+        }
+
+        function populateColorOptions() {
+            const colorOptionsContainer = document.getElementById('colorOptions');
+            colorOptionsContainer.innerHTML = '';
+            colorOptions.forEach(color => {
+                const colorOption = document.createElement('div');
+                colorOption.className = 'color-option';
+                colorOption.style.backgroundColor = color.code;
+                colorOption.setAttribute('data-color', color.name);
+                colorOption.onclick = () => selectColor(color.name);
+                colorOptionsContainer.appendChild(colorOption);
+            });
+        }
+
+        function selectColor(colorName) {
+            const colorOptions = document.querySelectorAll('.color-option');
+            colorOptions.forEach(option => {
+                if (option.getAttribute('data-color') === colorName) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+        }
+
+        document.getElementById('orderForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const carModel = document.getElementById('carModel').value;
+            const selectedColor = document.querySelector('.color-option.selected');
+            const interiorTrim = document.getElementById('interiorTrim').value;
+            const additionalFeatures = Array.from(document.getElementById('additionalFeatures').selectedOptions).map(option => option.value);
+
+            if (!selectedColor) {
+                showToast('Please select a color.');
+                return;
+            }
+
+            const color = selectedColor.getAttribute('data-color');
+
+            const orderDetails = {
+                carModel,
+                color,
+                interiorTrim,
+                additionalFeatures,
+                image: carData.find(car => car.name === carModel).image
+            };
+
+            addToCart(orderDetails);
+            closePopup('orderPopup');
+            showToast('Order added to cart!');
+        });
+
+        function addToCart(orderDetails) {
+            cart.push(orderDetails);
+            updateCartCount();
+        }
+
+        function updateCartCount() {
+            const cartCount = document.getElementById('cartCount');
+            cartCount.textContent = cart.length;
+        }
+
+        function showCartPopup() {
+            const cartItems = document.getElementById('cartItems');
+            cartItems.innerHTML = '';
+            cart.forEach((item, index) => {
+                const cartItem = document.createElement('div');
+                cartItem.className = 'cart-item';
+                cartItem.innerHTML = `
+                    <img src="${item.image}" alt="${item.carModel}">
+                    <div>
+                        <h3>${item.carModel}</h3>
+                        <p>Color: ${item.color}</p>
+                        <p>Interior: ${item.interiorTrim}</p>
+                        <p>Features: ${item.additionalFeatures.join(', ')}</p>
+                    </div>
+                    <button onclick="removeFromCart(${index})" class="auth-button futuristic-button">Remove</button>
+                `;
+                cartItems.appendChild(cartItem);
+            });
+            showPopup('cartPopup');
+        }
+
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartCount();
+            showCartPopup(); // Refresh the cart popup
+        }
+
+        function showCheckoutPopup() {
+            if (cart.length === 0) {
+                showToast('Your cart is empty.');
+                return;
+            }
+
+            const checkoutItems = document.getElementById('checkoutItems');
+            checkoutItems.innerHTML = '';
+            cart.forEach((item) => {
+                const itemElement = document.createElement('div');
+                itemElement.innerHTML = `
+                    <img src="${item.image}" alt="${item.carModel}" style="width: 100px; height: auto;">
+                    <h3>${item.carModel}</h3>
+                    <p>Color: ${item.color}</p>
+                    <p>Interior: ${item.interiorTrim}</p>
+                    <p>Features: ${item.additionalFeatures.join(', ')}</p>
+                `;
+                checkoutItems.appendChild(itemElement);
+            });
+
+            closePopup('cartPopup');
+            showPopup('checkoutPopup');
+        }
+
+        function handlePayment() {
+            const selectedPayment = document.querySelector('.payment-option.selected');
+            if (!selectedPayment) {
+                showToast('Please select a payment method.');
+                return;
+            }
+
+            const paymentMethod = selectedPayment.getAttribute('data-payment');
+
+            // Simulate payment processing
+            setTimeout(() => {
+                const receipt = document.getElementById('receipt');
+                const now = new Date();
+                let total = 0;
+                let receiptContent = `
+                    <h2>Purchase Receipt</h2>
+                    <p><strong>Customer:</strong> ${currentUser}</p>
+                    <p><strong>Date:</strong> ${now.toLocaleDateString()} ${now.toLocaleTimeString()}</p>
+                    <p><strong>Payment Method:</strong> ${paymentMethod}</p>
+                    <h3>Items:</h3>
+                `;
+
+                cart.forEach(item => {
+                    const car = carData.find(c => c.name === item.carModel);
+                    const price = car ? car.price : 0;
+                    total += price;
+                    receiptContent += `
+                        <div class="receipt-item">
+                            <img src="${item.image}" alt="${item.carModel}" style="width: 50px; height: auto;">
+                            <span>${item.carModel} (${item.color})</span>
+                            <span>$${price.toLocaleString()}</span>
+                        </div>
+                    `;
+                });
+
+                receiptContent += `
+                    <div class="receipt-total">
+                        <span>Total</span>
+                        <span>$${total.toLocaleString()}</span>
+                    </div>
+                `;
+
+                receipt.innerHTML = receiptContent;
+                lastReceipt = receiptContent;
+
+                orderHistory = orderHistory.concat(cart);
+                cart = [];
+                updateCartCount();
+                closePopup('checkoutPopup');
+                showPopup('receiptPopup');
+                showToast('Payment successful! Your order has been placed.');
+            }, 1500);
+        }
+
+        function showHistoryPopup() {
+            const orderHistoryContainer = document.getElementById('orderHistory');
+            orderHistoryContainer.innerHTML = '';
+            if (orderHistory.length === 0) {
+                orderHistoryContainer.innerHTML = '<p>No order history available.</p>';
+            } else {
+                orderHistory.forEach((order, index) => {
+                    const orderItem = document.createElement('div');
+                    orderItem.className = 'history-item';
+                    orderItem.innerHTML = `
+                        <img src="${order.image}" alt="${order.carModel}" style="width: 80px; height: 60px; object-fit: cover;">
+                        <div>
+                            <h3>Order #${index + 1}</h3>
+                            <p>Car: ${order.carModel}</p>
+                            <p>Color: ${order.color}</p>
+                            <p>Interior: ${order.interiorTrim}</p>
+                            <p>Features: ${order.additionalFeatures.join(', ')}</p>
+                        </div>
+                    `;
+                    orderHistoryContainer.appendChild(orderItem);
+                });
+            }
+            showPopup('historyPopup');
+        }
+
+        function showLastReceipt() {
+            if (lastReceipt) {
+                document.getElementById('receipt').innerHTML = lastReceipt;
+                showPopup('receiptPopup');
+            } else {
+                showToast('No recent purchases to show.');
+            }
+        }
+
+        function handleContactForm(event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const message = document.getElementById('message').value;
+
+            // Simulate form submission (in a real app, this would be sent to a server)
+            setTimeout(() => {
+                showToast('Thank you for your message. We will get back to you soon!');
+                document.getElementById('contactForm').reset();
+            }, 1000);
+        }
+
+        function checkLoginState() {
+            const user = JSON.parse(localStorage.getItem('user'));
+            if (user && user.isLoggedIn) {
+                isLoggedIn = true;
+                currentUser = user.username;
+                updateAuthState();
+            }
+        }
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Function to scroll to a section
+        function scrollToSection(sectionId) {
+            document.getElementById(sectionId).scrollIntoView({
+                behavior: 'smooth'
+            });
+        }
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 100) {
+                header.style.background = 'rgba(17, 24, 39, 0.8)';
+                header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+            } else {
+                header.style.background = 'transparent';
+                header.style.boxShadow = 'none';
+            }
+        });
+
+        // Intersection Observer for fade-in effect
+        const fadeElems = document.querySelectorAll('.fade-in');
+        const fadeObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        fadeElems.forEach(elem => {
+            elem.style.opacity = 0;
+            elem.style.transform = 'translateY(20px)';
+            elem.style.transition = 'opacity 0.5s ease-out, transform 0.5s ease-out';
+            fadeObserver.observe(elem);
+        });
+    </script>
+</body>
+</html>
